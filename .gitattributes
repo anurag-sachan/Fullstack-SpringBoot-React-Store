@@ -1,1 +1,7 @@
 
+frontend/src/setupTests.js -linguist-detectable
+frontend/tailwind.config.js -linguist-detectable
+frontend/src/states/atoms.js -linguist-detectable
+frontend/src/reportWebVitals.js -linguist-detectable
+frontend/src/components/AboutUser.js -linguist-detectable
+frontend/src/App.test.js -linguist-detectable
