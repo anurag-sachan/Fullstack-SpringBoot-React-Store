@@ -1,2 +1,2 @@
-*.js linguist-language=React
-frontend/src/components/* -linguist-detectable
+frontend/src/* -linguist-detectable
+frontend/src/components/*.js linguist-detectable
