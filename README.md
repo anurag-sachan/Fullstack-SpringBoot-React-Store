@@ -51,6 +51,11 @@ If you are using the application in localhost, please enable the option that say
 ## Screenshots
 - Please refer to the working demo-images from [**here**](demo-jpg).
 
+TPP                  |  Responsive UI & Admin View
+:-------------------------:|:-------------------------:
+![](./demo-jpg/1.jpg)  |  ![](./demo-jpg/2.jpg)
+![](./demo-jpg/3.jpg)  |  ![](./demo-jpg/4.jpg)
+
 <br/>
 Thanks,
 
