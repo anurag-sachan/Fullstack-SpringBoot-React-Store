@@ -57,8 +57,6 @@ public class LoginService {
 
         if (passwordEncoder.bCryptPasswordEncoder().matches(authRequest.getPassword(), tempUser.getPassword())) {
             return jwtService.generateToken(tempUser.getUsername());
-
-//            return "login successful!";
         }
         return ("Invalid Credentials");
     }

@@ -13,21 +13,6 @@ const Registration = () => {
   const[email, setEmail]= useState(null)
   const[password, setPassword]= useState(null)
 
-//   const [data, setData] = useState({
-//     firstName: null,
-//     lastName: null,
-//     email: null,
-//     password: null,
-//     role: 'USER'
-//  });
-
-//  const handleChange = e => {
-//     setData({...data, [e.target.name]: e.target.value})
-//  }
-    // setData( prevValues => {
-    //     return { ...prevValues,[e.target.name]: e.target.value}
-    //  }
-
   const submit = async values => {
     try {
       const resp = await axios.post("https://localhost:8080/registration",
@@ -42,7 +27,7 @@ const Registration = () => {
 
       if (resp.status === 200) {
         putNotification(resp.data)
-        navigate('/')
+        navigate('/login')
       }
     } catch (error) {
       putNotification("Error!", error.response?.data?.message)
@@ -83,14 +68,6 @@ const Registration = () => {
             </div>
         </div>
 
-        {/* <div class="flex flex-wrap -mx-3 mb-6">
-            <div class="w-full px-3">
-            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-password">
-                Confirm Password
-            </label>
-            <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-password" type="password" placeholder="******************"/>
-            </div>
-        </div> */}
         <div class="my-8 text-center">
             <button onClick={submit} class="w-1/3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
                 Register

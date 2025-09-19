@@ -5,7 +5,6 @@ import Registration from './components/Registration'
 import Login from './components/Login'
 import Store from './components/Store'
 import Cart from './components/Cart'
-import AboutUser from './components/AboutUser';
 
 function App() {
 
@@ -17,7 +16,6 @@ function App() {
           <Route path='/login' element={<Login/>}/>
           <Route path='/' element={<Store/>}/>
           <Route path='/cart' element={<Cart/>}/>
-          <Route path='/user' element={<AboutUser/>}/>
       </Routes>
     </Router>
   );

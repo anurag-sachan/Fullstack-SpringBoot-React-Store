@@ -1,29 +1,58 @@
 import React, { useState } from 'react'
-import { authState, searchState } from '../states/atoms'
+import { cartState, authState, searchState } from '../states/atoms'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import putNotification from './Notification'
+import { useNavigate } from 'react-router-dom'
+import axios from 'axios';
 
 const Navbar = () => {
-
     const [isOpen, setOpen]=useState(false)
-
     const [auth, setAuth] = useRecoilState(authState)
     const [search, setSearch] = useRecoilState(searchState)
-    const signout= async() =>{
-        // localStorage.removeItem("token")
-        localStorage.clear()
-        setAuth(false)
-        putNotification("Successful","You've been logged out successfully !")
+    const [cart, setCart] = useRecoilState(cartState);
+    const navigate=useNavigate()
+    const signout = async () => {
+        if (auth && cart.length > 0) {
+            try {
+                const email = localStorage.getItem('email');
+                const cartData = cart.map(item => ({
+                    id: item.id,
+                    img: item.img,
+                    name: item.name,
+                    brand: item.brand,
+                    price: item.price,
+                    quantity: item.quantity,
+                    email: email
+                }));
+
+                const response = await axios.post('https://localhost:8080/cart', cartData, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                    }
+                });
+
+                if (response.status === 200) {
+                    putNotification("Cart Saved", "Your cart has been saved successfully.");
+                }
+            } catch (error) {
+                putNotification("Error", "Failed to save cart data.");
+            }
+        }
+
+        localStorage.clear();
+        setAuth(false);
+        setCart([]);
+        navigate("/");
+        putNotification("Successful", "You've been logged out successfully!");
+    };
+    const redirect= async(page) =>{
+        navigate(`/${page}`);
     }
     return (
-        <nav class={`flex relative sticky top-0 items-center justify-between flex-wrap bg-white py-4 lg:px-40 md:px-20 px-10 ${!isOpen?'border-b border-gray-300 shadow-lg':null}`}>
+        <nav class={`flex fixed sticky items-center justify-between flex-wrap bg-white py-4 lg:px-40 md:px-20 px-10 ${!isOpen?'border-b border-gray-300 shadow-lg':null}`}>
             <div class="flex items-center flex-shrink-0 text-white mr-6">
             
             <a className='flex'>
-            {/* <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mr-3 h-6 text-blue-500 sm:h-9">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
-            </svg> */}
-            {/* absolute top-0 right-0 mr-9 mt-5 */}
             <div class="mr-5 -my-1 lg:hidden md:hidden">
             <button class="flex items-center px-3 py-2 border rounded text-gray-600 border-gray-300 hover:border-gray-500" onClick={()=>setOpen(!isOpen)}>
                 {isOpen?
@@ -33,67 +62,27 @@ const Navbar = () => {
             </button>
             
             </div>
-            <a href='/'><span class="self-center whitespace-nowrap font-semibold text-blue-500 tracking-tight py-2">💎 silk<b>ROAD.</b></span></a>
+            <a onClick={()=>redirect('')}><span class="hover:cursor-pointer self-center whitespace-nowrap font-semibold text-blue-500 tracking-tight py-2">💎 silk<b>ROAD.</b></span></a>
             </a>
             
             </div>
             <div class="w-full block lg:flex-grow md:flex md:items-center md:w-auto">
-                <div class="text-sm lg:flex-grow">
-                {/* {auth ? 
-                <a href="/user" class="inline-block text-sm font-semibold px-4 py-2 leading-none border rounded-full text-gray-700 border-white bg-gray-200 hover:border-gray-500 mt-4 lg:mt-0 mr-4">👤 User</a> : null } */}
-                </div>
-                {/* <div>
-                <input className="form-control mr-4 text-sm bg-gray-200 px-2 py-2 border rounded hover:border-gray-500" type="search" placeholder="Search" aria-label="Search" onChange={e => setSearch(e.target.value)} />
-                </div> */}
+                <div class="text-sm lg:flex-grow"></div>
                 <div>
                 <div className={`pt-2 md:pt-0 md:flex md:items-center md:pb-0 pb-4 absolute md:static bg-white md:z-auto z-[-1] left-0 w-full md:w-auto md:pl-0 pl-9 transition-all duration-500 ease-in ${isOpen ? 'top-[58px] border-b border-gray-300 shadow-lg' : 'top-[-490px]'}`}>
-                {/* <div className='flex self-center items-center'> */}
                     {!auth ?
                     <div>
-                        <a href="/login" class="inline-block text-sm font-semibold px-4 py-2 leading-none border rounded text-white bg-blue-500 hover:text-blue-500 hover:bg-white hover:border hover:border-blue-500 mr-2">Login</a>
-                        <a href="/registration" class="inline-block text-sm font-semibold px-4 py-2 leading-none border rounded text-white bg-rose-500 hover:text-red-500 hover:bg-white hover:border hover:border-rose-500 mr-4">Register</a>
+                        <a onClick={()=>redirect('login')} class="hover:cursor-pointer inline-block text-sm font-semibold px-4 py-2 leading-none border rounded text-white bg-blue-500 hover:text-blue-500 hover:bg-white hover:border hover:border-blue-500 mr-2">Login</a>
+                        <a onClick={()=>redirect('registration')} class="hover:cursor-pointer inline-block text-sm font-semibold px-4 py-2 leading-none border rounded text-white bg-rose-500 hover:text-red-500 hover:bg-white hover:border hover:border-rose-500 mr-4">Register</a>
                     </div> :
                     <a onClick={signout} class="hover:cursor-pointer inline-block text-sm font-semibold px-4 py-2 leading-none border rounded text-white bg-rose-500 hover:text-red-500 hover:bg-white hover:border hover:border-rose-500 mr-2">Sign Out</a>
                     }
-                    <a href="/cart" class="inline-block text-sm font-semibold px-4 py-2 leading-none border rounded text-white border-white bg-gray-200 hover:border-gray-500 mt-4 md:my-0">🛒</a>
+                    {/* <a href="/cart" class="inline-block text-sm font-semibold px-4 py-2 leading-none border rounded text-white border-white bg-gray-200 hover:border-gray-500 mt-4 md:my-0">🛒</a> */}
+                    <a onClick={()=>redirect('cart')} class="hover:cursor-pointer inline-block text-sm font-semibold px-4 py-2 leading-none border rounded text-white border-white bg-gray-200 hover:border-gray-500 mt-4 md:my-0">🛒</a>
                 </div>
                 </div>
             </div>
         </nav>
-    //     <nav class="fixed top-0 left-0 z-20 w-full border-b border-gray-200 bg-white py-2.5 px-6 sm:px-4">
-    // <div class="container mx-auto flex max-w-6xl flex-wrap items-center justify-between">
-        // <a href="#" class="flex items-center">
-        // <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mr-3 h-6 text-blue-500 sm:h-9">
-        //     <path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
-        // </svg>
-
-    //     <span class="self-center whitespace-nowrap text-xl font-semibold">silkRoad</span>
-    //     </a>
-    //     <div class="mt-2 sm:mt-0 sm:flex md:order-2">
-    //     {/* <!-- Login Button --> */}
-    //     <button type="button" class="rounde mr-3 hidden border border-blue-700 py-1.5 px-6 text-center text-sm font-medium text-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 md:inline-block rounded-lg">Login</button>
-    //     <button type="button" class="rounde mr-3 hidden bg-blue-700 py-1.5 px-6 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 md:mr-0 md:inline-block rounded-lg">Register</button>
-    //     {/* <!-- Register Button --> */}
-    //     <button data-collapse-toggle="navbar-sticky" type="button" class="inline-flex items-center rounded-lg p-2 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 md:hidden" aria-controls="navbar-sticky" aria-expanded="false">
-    //         <span class="sr-only">Open main menu</span>
-    //         <svg class="h-6 w-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path></svg>
-    //     </button>
-    //     </div>
-    //     <div class="hidden w-full items-center justify-between md:order-1 md:flex md:w-auto" id="navbar-sticky">
-    //     <ul class="mt-4 flex flex-col rounded-lg border border-gray-100 bg-gray-50 p-4 md:mt-0 md:flex-row md:space-x-8 md:border-0 md:bg-white md:text-sm md:font-medium">
-    //         <li>
-    //         <a href="#" class="block rounded bg-blue-700 py-2 pl-3 pr-4 text-white md:bg-transparent md:p-0 md:text-blue-700" aria-current="page">Home</a>
-    //         </li>
-    //         <li>
-    //         <a href="#" class="block rounded py-2 pl-3 pr-4 text-gray-700 hover:bg-gray-100 md:p-0 md:hover:bg-transparent md:hover:text-blue-700">You</a>
-    //         </li>
-    //         <li>
-    //         <a href="#" class="block rounded py-2 pl-3 pr-4 text-gray-700 hover:bg-gray-100 md:p-0 md:hover:bg-transparent md:hover:text-blue-700">Orders</a>
-    //         </li>
-    //     </ul>
-    //     </div>
-    // </div>
-    // </nav>
     )
 }
 
