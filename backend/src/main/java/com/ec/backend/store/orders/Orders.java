@@ -13,4 +13,8 @@ public class Orders {
     private String name;
     private String brand;
     private double price;
+
+    public int getId(){
+        return id;
+    }
 }

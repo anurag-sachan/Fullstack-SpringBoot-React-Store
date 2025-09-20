@@ -29,6 +29,22 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    public String getEmail(){
+        return email;
+    }
+
+    public Role getRole(){
+        return role;
+    }
+
+    public void setRole(Role role){
+        this.role=role;
+    }
+
+    public void setPassword(String password){
+        this.password=password;
+    }
+
 //    public User(String firstName, String lastName, String email, String password, String role) {
 //        firstName=this.getFirstName();
 //        lastName=this.getLastName();
@@ -83,5 +99,10 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return false;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
     }
 }
