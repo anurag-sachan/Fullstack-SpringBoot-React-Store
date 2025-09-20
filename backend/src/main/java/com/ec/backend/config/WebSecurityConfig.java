@@ -3,8 +3,7 @@ package com.ec.backend.config;
 import com.ec.backend.jwt.JwtAuthFilter;
 import com.ec.backend.user.User;
 import com.ec.backend.user.UserService;
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -16,6 +15,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -23,13 +23,14 @@ import static com.ec.backend.user.Permission.ADMIN_POST;
 import static com.ec.backend.user.Role.ADMIN;
 
 @Configuration
-@AllArgsConstructor
-//@EnableMethodSecurity
 public class WebSecurityConfig {
 
+    @Autowired
     private UserService userService;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtAuthFilter jwtAuthFilter;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private JwtAuthFilter jwtAuthFilter;
 
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider(){

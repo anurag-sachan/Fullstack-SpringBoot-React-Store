@@ -1,8 +1,5 @@
 package com.ec.backend.user;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Collections;
@@ -11,17 +8,21 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 
-@RequiredArgsConstructor
 public enum Role {
-
-//    USER,ADMIN
     USER(Collections.emptySet()),
     ADMIN(Set.of(
             Permission.ADMIN_POST
     ));
 
-    @Getter
     private final Set<Permission> permissions;
+
+    Role(Set<Permission> permissions) {
+        this.permissions = permissions;
+    }
+
+    public Set<Permission> getPermissions() {
+        return permissions;
+    }
 
     public List<SimpleGrantedAuthority> getAuthorities() {
         var authorities= getPermissions()

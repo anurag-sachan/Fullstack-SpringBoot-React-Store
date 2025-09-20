@@ -15,4 +15,8 @@ public class Product {
     private String brand;
     private double price;
 
+    public String getName(){
+        return name;
+    }
+
 }
