@@ -4,6 +4,7 @@ import {useNavigate} from "react-router-dom"
 import { useRecoilState } from 'recoil'
 import { authState } from '../states/atoms'
 import axios from 'axios'
+import { config } from '../config'
 
 const Registration = () => {
   const navigate = useNavigate()
@@ -15,7 +16,7 @@ const Registration = () => {
 
   const submit = async values => {
     try {
-      const resp = await axios.post("https://localhost:8080/registration",
+      const resp = await axios.post(`${config.backendUrl}/registration`,
         {
           firstName,
           lastName,

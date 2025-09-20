@@ -5,6 +5,7 @@ import putNotification from "./Notification";
 import { useNavigate } from 'react-router-dom';
 import { authState, cartState } from '../states/atoms';
 import { useRecoilState } from 'recoil';
+import { config } from '../config';
 
 const Store = () => {
     const [auth, setAuth] = useRecoilState(authState);
@@ -40,7 +41,7 @@ const Store = () => {
 
     const addProduct = async () => {
         try {
-            const resp = await axios.post("https://localhost:8080/products", {
+            const resp = await axios.post(`${config.backendUrl}/products`, {
                 img,
                 name,
                 brand,
@@ -64,7 +65,7 @@ const Store = () => {
 
     const getProducts = async () => {
         try {
-            const resp = await axios.get("https://localhost:8080/products/all");
+            const resp = await axios.get(`${config.backendUrl}/products/all`);
             if (resp.status === 200) {
                 setProducts(resp.data);
             }
@@ -80,7 +81,7 @@ const Store = () => {
     const fetchCartFromDb = async () => {
         const email = localStorage.getItem('email');
         try {
-            const resp = await axios.get(`https://localhost:8080/cart`, {
+            const resp = await axios.get(`${config.backendUrl}/cart`, {
                 params: { email },
                 headers: { 
                     'Authorization': `Bearer ${token}`,

@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { cartState, authState, searchState } from '../states/atoms'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import putNotification from './Notification'
+import { config } from '../config'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios';
 
@@ -25,7 +26,7 @@ const Navbar = () => {
                     email: email
                 }));
 
-                const response = await axios.post('https://localhost:8080/cart', cartData, {
+                const response = await axios.post(`${config.backendUrl}/cart`, cartData, {
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`,
                     }

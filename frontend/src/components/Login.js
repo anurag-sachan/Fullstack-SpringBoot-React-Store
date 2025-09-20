@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import axios from 'axios'
+import { config } from '../config'
 import {useNavigate} from 'react-router-dom'
 import { useRecoilState } from 'recoil'
 import { authState } from '../states/atoms'
@@ -13,7 +14,7 @@ const Login = () => {
 
     const logIn = async values => {
         try{
-            const resp = await axios.post('https://localhost:8080/login',{
+            const resp = await axios.post(`${config.backendUrl}/login`,{
                 email,
                 password
                 // email: values.usrname, //backend: values(fx).nameOfFormField

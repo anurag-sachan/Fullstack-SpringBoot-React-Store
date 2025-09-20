@@ -4,6 +4,7 @@ import putNotification from './Notification';
 import { useNavigate } from 'react-router-dom';
 import { cartState, authState } from '../states/atoms';
 import { useRecoilState } from 'recoil';
+import { config } from '../config';
 
 const Cart = () => {
   const [auth, setAuth] = useRecoilState(authState);
@@ -48,7 +49,7 @@ const Cart = () => {
   // Handle Checkout (empty the cart)
   const handleCheckout = async () => {
     try {
-      const resp = await axios.delete('https://localhost:8080/cart');
+      const resp = await axios.delete(`${config.backendUrl}/cart`);
       if (resp.status === 200) {
         setCartProducts([]); // Clear the cart in Recoil state
         putNotification('Order placed!', 'Go to Orders');
